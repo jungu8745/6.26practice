@@ -40,11 +40,6 @@ public class Student {
 
     @Override
     public String toString() {
-        @Override
-        public String toString() {
-            return "id=" + id + ", 이름=" + name + ", 점수=" + score + ", 상태=" + getPassStatus().getLabel();
-        }
+        return "id=" + id + ", 이름=" + name + ", 점수=" + score + ", 상태=" + getPassStatus().getLabel();
     }
-
-
 }

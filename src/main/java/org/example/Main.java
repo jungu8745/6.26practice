@@ -1,17 +1,67 @@
-package org.example;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 
-//TIP 코드를 <b>실행</b>하려면 <shortcut actionId="Run"/>을(를) 누르거나
-// 에디터 여백에 있는 <icon src="AllIcons.Actions.Execute"/> 아이콘을 클릭하세요.
 public class Main {
-    public static void main(String[] args) {
-        //TIP 캐럿을 강조 표시된 텍스트에 놓고 <shortcut actionId="ShowIntentionActions"/>을(를) 누르면
-        // IntelliJ IDEA이(가) 수정을 제안하는 것을 확인할 수 있습니다.
-        System.out.printf("Hello and welcome!");
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP <shortcut actionId="Debug"/>을(를) 눌러 코드 디버그를 시작하세요. 1개의 <icon src="AllIcons.Debugger.Db_set_breakpoint"/> 중단점을 설정해 드렸습니다
-            // 언제든 <shortcut actionId="ToggleLineBreakpoint"/>을(를) 눌러 중단점을 더 추가할 수 있습니다.
-            System.out.println("i = " + i);
+    private final Scanner scanner;
+
+    public Main() {
+        scanner = new Scanner(System.in);
+    }
+
+    public static void main(String[] args) {
+        new Main().run();
+    }
+
+    public void run() {
+        Classroom classroom = new Classroom();
+
+        classroom.addStudent(new Student(1, "김하나", 87));
+        classroom.addStudent(new Student(2, "이도윤", 92));
+        classroom.addStudent(new Student(3, "박서준", 58));
+
+        printStudents(classroom.getStudents());
+
+        System.out.print("수정할 학생 id: ");
+        int id = readInt();
+
+        System.out.print("새 점수: ");
+        int score = readInt();
+
+        Optional<Student> student = classroom.findById(id);
+
+        if (student.isEmpty()) {
+            System.out.println("학생을 찾을 수 없습니다.");
+            return;
         }
+
+        try {
+            student.get().updateScore(score);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+
+        System.out.println("\n합격자 목록");
+        printStudents(classroom.getPassedStudents());
+
+        System.out.println("\n최고 점수 학생");
+        printTopStudent(classroom.findTopStudent());
+
+        System.out.println("\n이름 검색(김)");
+        printStudents(classroom.searchByName("김"));
+    }
+
+    private void printStudents(List<Student> students) {
+        students.forEach(System.out::println);
+    }
+
+    private void printTopStudent(Optional<Student> student) {
+        student.ifPresent(System.out::println);
+    }
+
+    private int readInt() {
+        return scanner.nextInt();
     }
 }
